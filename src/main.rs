@@ -1,6 +1,7 @@
 extern crate piston_window;
 
 use piston_window::*;
+use std::path::Path;
 
 struct Game {
     rotation: f64,
@@ -89,6 +90,13 @@ fn main() {
         .exit_on_esc(true).build().unwrap();
 
     let mut game = Game::new();
+
+    let texture = Texture::from_path(
+        &mut *window.factory.borrow_mut(),
+        &Path::new("assets/fighterspr1.png"),
+        Flip::None,
+        &TextureSettings::new()
+    ).unwrap();
 
     for e in window {
 
