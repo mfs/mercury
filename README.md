@@ -8,4 +8,4 @@ expected) and using a great piece of artwork by [MillionthVector][2].
 
 [0]: http://www.piston.rs/
 [1]: http://piston-tutorial.logdown.com/posts/306677-part-1-hello-piston
-[2]: (http://millionthvector.blogspot.de)
+[2]: http://millionthvector.blogspot.de
