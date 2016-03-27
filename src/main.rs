@@ -1,20 +1,37 @@
 extern crate piston_window;
+extern crate gfx_device_gl;
+extern crate gfx_graphics;
+extern crate gfx;
 
 use piston_window::*;
+use gfx_device_gl::Resources;
 use std::path::Path;
 
 struct Game {
     rotation: f64,
     x: f64, y: f64,
     up_d: bool, down_d: bool, left_d: bool, right_d: bool,
+    image: Option<Texture<Resources>>
 }
 
 impl Game {
     fn new() -> Game {
         Game {
             rotation: 0.0, x: 0.0, y: 0.0,
-            up_d: false, down_d: false, left_d: false, right_d: false
+            up_d: false, down_d: false, left_d: false, right_d: false,
+            image: None
         }
+    }
+
+    fn on_load(&mut self, w: &PistonWindow) {
+        let texture = Texture::from_path(
+            &mut *w.factory.borrow_mut(),
+            &Path::new("assets/fighterspr1.png"),
+            Flip::None,
+            &TextureSettings::new()
+        ).unwrap();
+
+	self.image = Some(texture);
     }
 
     fn on_update(&mut self, update: UpdateArgs) {
@@ -91,12 +108,8 @@ fn main() {
 
     let mut game = Game::new();
 
-    let texture = Texture::from_path(
-        &mut *window.factory.borrow_mut(),
-        &Path::new("assets/fighterspr1.png"),
-        Flip::None,
-        &TextureSettings::new()
-    ).unwrap();
+    game.on_load(&window);
+
 
     for e in window {
 
