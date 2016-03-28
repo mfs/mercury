@@ -57,7 +57,17 @@ impl Game {
             let center = c.transform.trans((render.width / 2) as f64, (render.height / 2) as f64);
             let square = rectangle::square(0.0, 0.0, 100.0);
             let gray = [0.7, 0.7, 0.7, 1.0];
-            rectangle(gray, square, center.trans(self.x, self.y).rot_rad(self.rotation).trans(-50.0, -50.0), g);
+            //rectangle(gray, square, center.trans(self.x, self.y).rot_rad(self.rotation).trans(-50.0, -50.0), g);
+            match self.image {
+                Some(ref x) => {
+                    let (width, height) = x.get_size();
+                    let t = center.trans(self.x, self.y).rot_rad(self.rotation)
+                                  .trans(-(width as f64) * 0.2 /2.0, -(height as f64) * 0.2 /2.0)
+                                  .scale(0.2, 0.2);
+                    image(x, t, g);
+                },
+                _ => {}
+            }
         });
     }
 
