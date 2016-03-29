@@ -6,11 +6,38 @@ extern crate gfx;
 use piston_window::*;
 use gfx_device_gl::Resources;
 use std::path::Path;
+use std::collections::HashSet;
+
+// much nicer way to handle keyboard from:
+// github.com/caspark/2015-08-rust-half-a-game-piston-talk
+struct KeyState {
+    held_keys: HashSet<Button>,
+}
+
+impl KeyState {
+    fn new() -> Self {
+        KeyState { held_keys: HashSet::new() }
+    }
+
+    fn update(&mut self, w: &PistonWindow) {
+        if let Some(pressed) = w.press_args() {
+            self.held_keys.insert(pressed);
+        }
+        if let Some(released) = w.release_args() {
+            self.held_keys.remove(&released);
+        }
+    }
+
+    fn is_down(&self, button: &Button) -> bool {
+        self.held_keys.contains(button)
+    }
+}
 
 struct Game {
     rotation: f64,
     x: f64, y: f64,
     up_d: bool, down_d: bool, left_d: bool, right_d: bool,
+    keystate: KeyState,
     image: Option<Texture<Resources>>
 }
 
@@ -19,6 +46,7 @@ impl Game {
         Game {
             rotation: 0.0, x: 0.0, y: 0.0,
             up_d: false, down_d: false, left_d: false, right_d: false,
+            keystate: KeyState::new(),
             image: None
         }
     }
