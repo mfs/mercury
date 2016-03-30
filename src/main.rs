@@ -19,13 +19,12 @@ impl KeyState {
         KeyState { held_keys: HashSet::new() }
     }
 
-    fn update(&mut self, w: &PistonWindow) {
-        if let Some(pressed) = w.press_args() {
-            self.held_keys.insert(pressed);
-        }
-        if let Some(released) = w.release_args() {
-            self.held_keys.remove(&released);
-        }
+    fn update(&mut self, input: &Input ) {
+        match input {
+            &Input::Press(x)   => { self.held_keys.insert(x); },
+            &Input::Release(x) => { self.held_keys.remove(&x); },
+            _                  => {},
+        };
     }
 
     fn is_down(&self, button: &Button) -> bool {
@@ -98,6 +97,7 @@ impl Game {
     }
 
     fn on_input(&mut self, input: Input) {
+        self.keystate.update(&input);
     }
 }
 
@@ -111,7 +111,6 @@ fn main() {
 
 
     for e in window {
-        game.keystate.update(&e);
         match e.event {
             Some(Event::Update(update)) => game.on_update(update),
             Some(Event::Render(render)) => game.on_draw(render, e),
