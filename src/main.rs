@@ -36,7 +36,6 @@ impl KeyState {
 struct Game {
     rotation: f64,
     x: f64, y: f64,
-    up_d: bool, down_d: bool, left_d: bool, right_d: bool,
     keystate: KeyState,
     image: Option<Texture<Resources>>
 }
@@ -45,7 +44,6 @@ impl Game {
     fn new() -> Game {
         Game {
             rotation: 0.0, x: 0.0, y: 0.0,
-            up_d: false, down_d: false, left_d: false, right_d: false,
             keystate: KeyState::new(),
             image: None
         }
@@ -65,16 +63,16 @@ impl Game {
     fn on_update(&mut self, update: UpdateArgs) {
         self.rotation += 0.7 * update.dt;
 
-        if self.up_d {
+        if self.keystate.is_down(&Button::Keyboard(Key::Up) ) {
            self.y += (-50.0) * update.dt;
         }
-        if self.down_d {
+        if self.keystate.is_down(&Button::Keyboard(Key::Down) ) {
             self.y += (50.0) * update.dt;
         }
-        if self.left_d {
+        if self.keystate.is_down(&Button::Keyboard(Key::Left) ) {
             self.x += (-50.0) * update.dt;
         }
-        if self.right_d {
+        if self.keystate.is_down(&Button::Keyboard(Key::Right) ) {
             self.x += (50.0) * update.dt;
         }
     }
@@ -100,44 +98,7 @@ impl Game {
     }
 
     fn on_input(&mut self, input: Input) {
-   	    match input {
-			Input::Press(but) => {
-				match but {
-					Button::Keyboard(Key::Up) => {
-					    self.up_d = true;
-					}
-					Button::Keyboard(Key::Down) => {
-					    self.down_d = true;
-					}
-					Button::Keyboard(Key::Left) => {
-					    self.left_d = true;
-					}
-					Button::Keyboard(Key::Right) => {
-					    self.right_d = true;
-					}
-					_ => {}
-				}
-			}
-			Input::Release(but) => {
-				match but {
-					Button::Keyboard(Key::Up) => {
-					    self.up_d = false;
-					}
-					Button::Keyboard(Key::Down) => {
-					    self.down_d = false;
-					}
-					Button::Keyboard(Key::Left) => {
-					    self.left_d = false;
-					}
-					Button::Keyboard(Key::Right) => {
-					    self.right_d = false;
-					}
-					_ => {}
-				}
-			}
-			_ => {}
-		}
-	}
+    }
 }
 
 fn main() {
@@ -150,7 +111,7 @@ fn main() {
 
 
     for e in window {
-
+        game.keystate.update(&e);
         match e.event {
             Some(Event::Update(update)) => game.on_update(update),
             Some(Event::Render(render)) => game.on_draw(render, e),
