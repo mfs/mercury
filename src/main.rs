@@ -35,6 +35,7 @@ impl KeyState {
 struct Game {
     rotation: f64,
     x: f64, y: f64,
+    vx: f64, vy: f64,
     keystate: KeyState,
     image: Option<Texture<Resources>>
 }
@@ -43,6 +44,7 @@ impl Game {
     fn new() -> Game {
         Game {
             rotation: 0.0, x: 0.0, y: 0.0,
+            vx: 0.0, vy: 0.0,
             keystate: KeyState::new(),
             image: None
         }
@@ -60,20 +62,24 @@ impl Game {
     }
 
     fn on_update(&mut self, update: UpdateArgs) {
-        self.rotation += 0.7 * update.dt;
+        //self.rotation += 0.7 * update.dt;
 
         if self.keystate.is_down(&Button::Keyboard(Key::Up) ) {
-           self.y += (-50.0) * update.dt;
+           self.vy += (-5.0) * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Down) ) {
-            self.y += (50.0) * update.dt;
+            self.vy += (5.0) * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Left) ) {
-            self.x += (-50.0) * update.dt;
+            self.vx += (-5.0) * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Right) ) {
-            self.x += (50.0) * update.dt;
+            self.vx += (5.0) * update.dt;
         }
+
+        self.x += self.vx;
+        self.y += self.vy;
+
     }
 
     fn on_draw(&mut self, render: RenderArgs, e: PistonWindow) {
