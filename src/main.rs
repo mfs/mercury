@@ -36,6 +36,7 @@ struct Game {
     rotation: f64,
     x: f64, y: f64,
     vx: f64, vy: f64,
+    fuel: f64,
     keystate: KeyState,
     image: Option<Texture<Resources>>
 }
@@ -45,6 +46,7 @@ impl Game {
         Game {
             rotation: 0.0, x: 0.0, y: 0.0,
             vx: 0.0, vy: 0.0,
+            fuel: 200.0,
             keystate: KeyState::new(),
             image: None
         }
@@ -64,21 +66,32 @@ impl Game {
     fn on_update(&mut self, update: UpdateArgs) {
         //self.rotation += 0.7 * update.dt;
 
+        self.x += self.vx;
+        self.y += self.vy;
+
+        println!("fuel = {}", self.fuel);
+
+        if self.fuel <= 0.0 {
+            return;
+        }
+
         if self.keystate.is_down(&Button::Keyboard(Key::Up) ) {
-           self.vy += (-5.0) * update.dt;
+            self.vy += (-5.0) * update.dt;
+            self.fuel -= 10.0 * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Down) ) {
             self.vy += (5.0) * update.dt;
+            self.fuel -= 10.0 * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Left) ) {
             self.vx += (-5.0) * update.dt;
+            self.fuel -= 10.0 * update.dt;
         }
         if self.keystate.is_down(&Button::Keyboard(Key::Right) ) {
             self.vx += (5.0) * update.dt;
+            self.fuel -= 10.0 * update.dt;
         }
 
-        self.x += self.vx;
-        self.y += self.vy;
 
     }
 
