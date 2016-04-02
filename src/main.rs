@@ -3,6 +3,12 @@ extern crate gfx_device_gl;
 extern crate gfx_graphics;
 extern crate gfx;
 
+#[macro_use]
+extern crate cfor;
+
+mod starfield;
+use starfield::get_stars;
+
 use piston_window::*;
 use gfx_device_gl::Resources;
 use std::path::Path;
@@ -121,6 +127,10 @@ impl Game {
 }
 
 fn main() {
+
+    get_stars(0.0, 0.0, 300.0, 300.0);
+    return;
+
     let window: PistonWindow = WindowSettings::new("mercury", [600, 600])
         .exit_on_esc(true).build().unwrap();
 
